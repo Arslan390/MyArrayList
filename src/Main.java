@@ -57,7 +57,7 @@ public class Main {
 
         // метод sort(Сomparator<? super T> c)
 
-        list.sort(Integer::compareTo);
+        list.sort();
         System.out.println(list);
         list.sort(Collections.reverseOrder());
         System.out.println(list);

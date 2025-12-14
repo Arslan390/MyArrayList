@@ -132,18 +132,37 @@ public class SuperArrayList<V> implements List<V> {
 
     @Override
     public void sort(Comparator<? super V> comparator) {
+        if (comparator == null) {
+            for (int i = 0; i < size; i++) {
+                if (!(array[i] instanceof Comparable)) {
+                    throw new ClassCastException("Элементы должны реализовывать Comparable, если не указан компаратор.");
+                }
+            }
+        }
         int leftIndex = 0;
         int rightIndex = size - 1;
         quickSort(comparator, leftIndex, rightIndex);
+    }
+
+    public void sort() {
+        sort(null);
     }
 
     private void quickSort(Comparator<? super V> comparator, int start, int end) {
         if (start >= end || array.length == 0) return;
         V pivot = (V) array[(start + end) / 2];
         int startMarker = start, endMarker = end;
+
         while (startMarker <= endMarker) {
-            while (comparator.compare((V) array[startMarker], pivot) < 0) startMarker++;
-            while (comparator.compare((V) array[endMarker], pivot) > 0) endMarker--;
+
+            while ((comparator == null ? ((Comparable<V>) array[startMarker]).compareTo(pivot) < 0 :
+                    comparator.compare((V) array[startMarker], pivot) < 0))
+                startMarker++;
+
+            while ((comparator == null ? ((Comparable<V>) array[endMarker]).compareTo(pivot) > 0 :
+                    comparator.compare((V) array[endMarker], pivot) > 0))
+                endMarker--;
+
             if (startMarker <= endMarker) {
                 V temp = (V) array[startMarker];
                 array[startMarker] = array[endMarker];
